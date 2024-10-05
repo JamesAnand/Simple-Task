@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Task.Management.Views.TaskPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Task.Management.ViewModels;assembly=Task.Management"
+    Title="TaskPage"
+    x:DataType="vm:TaskPageViewModel">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ColumnDefinitionCollection x:Key="MobileColumns">
+                <ColumnDefinition Width="23*" />
+                <ColumnDefinition Width="77*" />
+            </ColumnDefinitionCollection>
+            <ColumnDefinitionCollection x:Key="DefaultColumns">
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="90*" />
+            </ColumnDefinitionCollection>
+            <ColumnDefinitionCollection x:Key="TwoAutoColumns">
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </ColumnDefinitionCollection>
+            <ColumnDefinitionCollection x:Key="TwoDefaultColumns">
+                <ColumnDefinition Width="50*" />
+                <ColumnDefinition Width="50*" />
+            </ColumnDefinitionCollection>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid BackgroundColor="{StaticResource Primary}" RowDefinitions="Auto,*">
+        <Label
+            Margin="10,20,10,20"
+            FontAttributes="Bold"
+            FontSize="Large"
+            HorizontalOptions="StartAndExpand"
+            Text="Simple Task"
+            TextColor="White"
+            VerticalOptions="CenterAndExpand" />
+        <Border
+            Grid.Row="1"
+            BackgroundColor="{AppThemeBinding Dark=Black,
+                                              Light=White}"
+            VerticalOptions="Fill">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,0,0" />
+            </Border.StrokeShape>
+            <Grid
+                Margin="10"
+                RowDefinitions="Auto,*"
+                RowSpacing="6">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    Text="{Binding PageTitle}"
+                    TextColor="{AppThemeBinding Dark=White,
+                                                Light=Black}"
+                    VerticalOptions="CenterAndExpand" />
+                <Grid
+                    Grid.Row="1"
+                    ColumnDefinitions="{OnIdiom Phone={StaticResource MobileColumns},
+                                                Default={StaticResource DefaultColumns}}"
+                    ColumnSpacing="10"
+                    RowDefinitions="Auto,Auto,Auto,*"
+                    RowSpacing="6">
+                    <Label
+                        Text="Title:"
+                        TextColor="{AppThemeBinding Dark=White,
+                                                    Light=Black}"
+                        VerticalOptions="Center" />
+                    <Border
+                        Grid.Column="1"
+                        Padding="0"
+                        Stroke="{Binding BorderColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10" />
+                        </Border.StrokeShape>
+                        <Entry
+                            Placeholder="Title........"
+                            Text="{Binding Title}"
+                            TextColor="{AppThemeBinding Dark=White,
+                                                        Light=Black}" />
+                    </Border>
+                    <Label
+                        Grid.Row="1"
+                        Text="Description:"
+                        TextColor="{AppThemeBinding Dark=White,
+                                                    Light=Black}"
+                        VerticalOptions="Center" />
+                    <Border
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Padding="0"
+                        Stroke="{StaticResource Primary}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10" />
+                        </Border.StrokeShape>
+                        <Entry
+                            Placeholder="Description........"
+                            Text="{Binding Description}"
+                            TextColor="{AppThemeBinding Dark=White,
+                                                        Light=Black}" />
+                    </Border>
+                    <Label
+                        Grid.Row="2"
+                        Text="Due Date:"
+                        TextColor="{AppThemeBinding Dark=White,
+                                                    Light=Black}"
+                        VerticalOptions="Center" />
+                    <DatePicker
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Date="{Binding DueDate}"
+                        MinimumDate="{Binding MinimumDate}"
+                        TextColor="{AppThemeBinding Dark=White,
+                                                    Light=Black}" />
+                    <Grid
+                        Grid.Row="3"
+                        Grid.Column="{OnIdiom Default=1,
+                                              Phone=0}"
+                        Grid.ColumnSpan="{OnIdiom Phone=2,
+                                                  Default=1}"
+                        ColumnDefinitions="{OnIdiom Default={StaticResource TwoAutoColumns},
+                                                    Phone={StaticResource TwoDefaultColumns}}"
+                        ColumnSpacing="6"
+                        HorizontalOptions="{OnIdiom Default=End,
+                                                    Phone=Fill}"
+                        VerticalOptions="End">
+                        <Button
+                            Command="{Binding CommandBack}"
+                            CornerRadius="20"
+                            HorizontalOptions="{OnIdiom Default=End,
+                                                        Phone=Fill}"
+                            Style="{StaticResource DisabledButtonStyle}"
+                            Text="Back"
+                            VerticalOptions="End" />
+                        <Button
+                            Grid.Column="1"
+                            Command="{Binding CommandSave}"
+                            CornerRadius="20"
+                            HorizontalOptions="{OnIdiom Default=End,
+                                                        Phone=Fill}"
+                            IsEnabled="{Binding IsValid}"
+                            Style="{StaticResource ActiveButtonStyle}"
+                            Text="Save"
+                            VerticalOptions="End" />
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

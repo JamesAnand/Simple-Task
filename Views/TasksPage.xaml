@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Task.Management.Views.TasksPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:entity="clr-namespace:Task.Management.Entities;assembly=Task.Management"
+    xmlns:vm="clr-namespace:Task.Management.ViewModels;assembly=Task.Management"
+    Title="TasksPage"
+    x:DataType="vm:TasksPageViewModel">
+    <NavigationPage.TitleView>
+        <Label Text="Tasks" TextColor="Black" />
+    </NavigationPage.TitleView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ColumnDefinitionCollection x:Key="MobileColumns">
+                <ColumnDefinition Width="75*" />
+                <ColumnDefinition Width="25*" />
+            </ColumnDefinitionCollection>
+            <ColumnDefinitionCollection x:Key="DefaultColumns">
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </ColumnDefinitionCollection>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid BackgroundColor="{StaticResource Primary}" RowDefinitions="Auto,*">
+        <Label
+            Margin="10,20,10,20"
+            FontAttributes="Bold"
+            FontSize="Large"
+            HorizontalOptions="StartAndExpand"
+            Text="Simple Task"
+            TextColor="White"
+            VerticalOptions="CenterAndExpand" />
+        <Border
+            Grid.Row="1"
+            BackgroundColor="{AppThemeBinding Dark=Black,
+                                              Light=White}"
+            VerticalOptions="Fill">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,0,0" />
+            </Border.StrokeShape>
+            <Grid
+                Margin="10"
+                RowDefinitions="Auto,*"
+                RowSpacing="6">
+                <Grid
+                    ColumnDefinitions="{OnIdiom Default={StaticResource DefaultColumns},
+                                                Phone={StaticResource MobileColumns}}"
+                    ColumnSpacing="6"
+                    RowDefinitions="Auto,Auto"
+                    RowSpacing="6">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        Text="Tasks"
+                        TextColor="{AppThemeBinding Dark=White,
+                                                    Light=Black}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Row="1"
+                        Text="{Binding Tasks.Count, StringFormat='You have {0} tasks.'}"
+                        TextColor="Gray"
+                        VerticalOptions="Center" />
+                    <Button
+                        Grid.RowSpan="2"
+                        Grid.Column="1"
+                        Margin="5"
+                        Command="{Binding CommandAddNewTask}"
+                        CornerRadius="20"
+                        HorizontalOptions="Fill"
+                        Style="{StaticResource ActiveButtonStyle}"
+                        Text="+ Add"
+                        VerticalOptions="Center" />
+                </Grid>
+
+                <CollectionView Grid.Row="1" ItemsSource="{Binding Tasks}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="entity:TaskEntity">
+                            <Border
+                                Padding="10"
+                                BackgroundColor="{AppThemeBinding Light=#f3f0fc,
+                                                                  Dark=#1b1b1c}"
+                                StrokeThickness="1">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+                                <Grid
+                                    Margin="5"
+                                    ColumnDefinitions="*,Auto"
+                                    ColumnSpacing="6"
+                                    RowDefinitions="Auto,Auto,Auto"
+                                    RowSpacing="6">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Large"
+                                        Text="{Binding Title}"
+                                        TextColor="{AppThemeBinding Dark=White,
+                                                                    Light=Black}" />
+                                    <Label
+                                        Grid.Row="1"
+                                        FontSize="12"
+                                        Text="{Binding Description}"
+                                        TextColor="Gray" />
+                                    <Label
+                                        Grid.Row="2"
+                                        Text="{Binding DueDate, StringFormat='Due Date: \{0:dd-MMM-yyyy\}'}"
+                                        TextColor="{AppThemeBinding Dark=White,
+                                                                    Light=Black}" />
+                                    <Image
+                                        Grid.RowSpan="3"
+                                        Grid.Column="1"
+                                        Margin="10"
+                                        Aspect="AspectFit"
+                                        HeightRequest="45"
+                                        Source="{AppThemeBinding Light=dots.png,
+                                                                 Dark=dots_white.png}"
+                                        VerticalOptions="Center"
+                                        WidthRequest="20">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TasksPageViewModel}}, Path=CommandSelected}" CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+        <Grid
+            Grid.RowSpan="2"
+            BackgroundColor="Black"
+            HorizontalOptions="Fill"
+            IsVisible="{Binding ShowOptions}"
+            Opacity="0.7"
+            VerticalOptions="Fill" />
+        <Border
+            Grid.RowSpan="2"
+            Margin="100,0,100,0"
+            BackgroundColor="{AppThemeBinding Dark=Black,
+                                              Light=White}"
+            HorizontalOptions="{OnIdiom Default=Center,
+                                        Phone=Fill}"
+            IsVisible="{Binding ShowOptions}"
+            Stroke="{StaticResource Primary}"
+            StrokeThickness="{AppThemeBinding Dark=1,
+                                              Light=0}"
+            VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
+            <Grid
+                Padding="10"
+                RowDefinitions="Auto,Auto,Auto"
+                RowSpacing="6">
+                <Button
+                    Padding="20,0,20,0"
+                    Command="{Binding CommandEditTask}"
+                    CornerRadius="20"
+                    Style="{StaticResource ActiveButtonStyle}"
+                    Text="Edit" />
+                <Button
+                    Grid.Row="1"
+                    Padding="20,0,20,0"
+                    Command="{Binding CommandDeleteTask}"
+                    CornerRadius="20"
+                    Style="{StaticResource ActiveButtonStyle}"
+                    Text="Delete" />
+                <Button
+                    Grid.Row="2"
+                    Padding="20,0,20,0"
+                    Command="{Binding CommandClose}"
+                    CornerRadius="20"
+                    Style="{StaticResource DisabledButtonStyle}"
+                    Text="Close" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>
